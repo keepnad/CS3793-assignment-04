@@ -3,6 +3,7 @@
 # CS3793 Assignment 04
 # 10/19/2018
 # neuralnet.py based on Dr. O'Hara's bp.c
+# python 3
 
 import random
 import neuralnet as nn
@@ -211,7 +212,7 @@ def play(player, dealer, deck, net_2, net_3):
         # print("both bust, dealer wins tie")
         # print("player total:", player.total, "dealer total:", dealer.total, "\n")
         return 0
-    elif player.bust is True and dealer.bust is not True:
+    elif player.bust is True and dealer.bust is False:
         # print("player busts, dealer wins")
         # print("player total:", player.total, "dealer total:", dealer.total, "\n")
         return 0
@@ -242,8 +243,8 @@ def main():
     global net3_total_right
     global net3_total_wrong
 
-    # set number of games and create neural nets
-    games = 100000
+    # set number of games (epochs) and create neural nets
+    games = 500000
     two_card_net = nn.NeuralNetwork(3, 12, 2, 0.01)
     three_card_net = nn.NeuralNetwork(4, 16, 2, 0.01)
 
@@ -274,16 +275,16 @@ def main():
         shuffle(deck)
 
         # print game number and percent correct choices
-        if i % 1000 == 0:
+        if (i % 1000 == 0) or (i <= 100 and i % 10 == 0):
             print("finished game number", i)
             if net2_total_wrong > 0 and net2_total_right > 0:
                 two_card_percent = net2_total_right/(net2_total_right + net2_total_wrong)
                 print("two card net right choice:   %.02f%%" % (two_card_percent * 100))
-                print("two card net confidence:     %.04f" % two_card_net.confidence)
+                # print("two card net confidence:     %.04f" % two_card_net.confidence)
             if net3_total_wrong > 0 and net3_total_right > 0:
                 three_card_percent = net3_total_right/(net3_total_right + net3_total_wrong)
-                print("three card net right choice: %.02f%%" % (three_card_percent * 100))
-                print("three card net confidence:   %.04f\n" % three_card_net.confidence)
+                print("three card net right choice: %.02f%%\n" % (three_card_percent * 100))
+                # print("three card net confidence:   %.04f" % three_card_net.confidence)
 
 
 if __name__ == "__main__":

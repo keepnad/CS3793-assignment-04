@@ -3,6 +3,8 @@
 # CS3793 Assignment 04
 # 10/19/2018
 # neuralnet.py based on Dr. O'Hara's bp.c
+# python 3
+
 
 import random
 import math
@@ -47,6 +49,7 @@ class NeuralNetwork:
     # forward prediction
     def predict(self, sample):
         i = 0
+        # propagate sample and weights to hidden nodes
         for k in range(self.hidden_nodes):
             weight_sum = 0.0
             for i in range(self.inputs):
@@ -54,6 +57,7 @@ class NeuralNetwork:
             weight_sum += self.bias_bottom[k]
             self.hidden[k] = sigmoid(weight_sum)
 
+        # propagate hidden nodes to output
         for k in range(self.classes):
             weight_sum = 0.0
             for i in range(self.hidden_nodes):
@@ -61,22 +65,26 @@ class NeuralNetwork:
             weight_sum += self.bias_top[k]
             self.output[k] = sigmoid(weight_sum)
 
+        # choose to stay (0) or draw (1)
         for k in range(self.classes):
             if k == 0 or self.output[k] > self.output[i]:
                 i = k
 
+        # find confidence by seeing how preferred the chosen value was
         next_max_sum = -1.0
         for k in range(self.classes):
             if k != i:
                 if next_max_sum < 0.0 or self.output[k] > next_max_sum:
                     next_max_sum = self.output[k]
-
         self.confidence = self.output[i] - next_max_sum
+
+        # return stay (0) or draw (1)
         return i
 
     # backward propagation
     def adjust_weights(self, sample, actual):
         delta = [0] * self.classes
+        # set it so that correct outputs nudge top weights in that direction
         for k in range(self.classes):
             if k == actual:
                 weight_sum = 1.0
@@ -91,6 +99,7 @@ class NeuralNetwork:
 
             self.bias_top[k] += self.eta * delta[k]
 
+        # use hidden nodes and top weights to adjust bottom weights in the right direction
         for j in range(self.hidden_nodes):
             d = 0.0
             for k in range(self.classes):
