@@ -1,20 +1,30 @@
+# Daniel Peek qer419
+# Michael Canas ohh135
+# CS3793 Assignment 04
+# 10/19/2018
+# neuralnet.py based on Dr. O'Hara's bp.c
+
 import random
 import math
 
 
+# create random starting weights
 def rand():
     number = random.uniform(-1, 1)
     return number
 
 
+# sigmoid logistic function
 def sigmoid(x):
     return 1.0 / (1 + math.exp(-x))
 
 
+# derivative of sigmoid
 def derivative_sigmoid(x):
     return x * (1.0 - x)
 
 
+# class for the neural net
 class NeuralNetwork:
     def __init__(self, number_inputs, number_hidden, number_outputs, eta):
         self.inputs = number_inputs
@@ -24,14 +34,17 @@ class NeuralNetwork:
         self.eta = eta
         self.confidence = 0
 
+        # weights
         self.bias_bottom = [rand() for i in range(self.hidden_nodes)]
         self.bias_top = [rand() for i in range(self.classes)]
         self.weight_bottom = [[rand() for i in range(self.hidden_nodes)] for j in range(self.inputs)]
         self.weight_top = [[rand() for i in range(self.classes)] for j in range(self.hidden_nodes)]
 
+        # hidden and output nodes
         self.hidden = [0.0] * self.hidden_nodes
         self.output = [0.0] * self.classes
 
+    # forward prediction
     def predict(self, sample):
         i = 0
         for k in range(self.hidden_nodes):
@@ -61,6 +74,7 @@ class NeuralNetwork:
         self.confidence = self.output[i] - next_max_sum
         return i
 
+    # backward propagation
     def adjust_weights(self, sample, actual):
         delta = [0] * self.classes
         for k in range(self.classes):
