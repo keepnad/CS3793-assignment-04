@@ -65,7 +65,7 @@ class NeuralNetwork:
             weight_sum += self.bias_top[k]
             self.output[k] = sigmoid(weight_sum)
 
-        # choose to stay (0) or draw (1)
+        # choose to stay (0) or draw (1), by taking the higher output
         for k in range(self.classes):
             if k == 0 or self.output[k] > self.output[i]:
                 i = k
@@ -84,7 +84,7 @@ class NeuralNetwork:
     # backward propagation
     def adjust_weights(self, sample, actual):
         delta = [0] * self.classes
-        # set it so that correct outputs nudge top weights in that direction
+        # correct outputs nudge top weights in that direction
         for k in range(self.classes):
             if k == actual:
                 weight_sum = 1.0

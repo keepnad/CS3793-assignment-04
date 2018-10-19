@@ -101,9 +101,9 @@ def make_deck():
     return deck
 
 
-# shuffle the deck with 200 random swaps
+# shuffle the deck with 400 random swaps
 def shuffle(deck):
-    for i in range(200):
+    for i in range(400):
         x = random.randint(0, len(deck) - 1)
         y = random.randint(0, len(deck) - 1)
         deck[x], deck[y] = deck[y], deck[x]
@@ -156,7 +156,7 @@ def play(player, dealer, deck, net_2, net_3):
     if dealer.stay is False:
         dealer.draw(deck)
 
-    # run the three card neural net
+    # if the two card net chose to draw, run the three card neural net
     if player.stay is False:
         sample = [player.hand[0].value, player.hand[1].value, player.hand[2].value, dealer.face_up_card.value]
         guess = net_3.predict(sample)
@@ -244,7 +244,7 @@ def main():
     global net3_total_wrong
 
     # set number of games (epochs) and create neural nets
-    games = 500000
+    games = 10000
     two_card_net = nn.NeuralNetwork(3, 12, 2, 0.01)
     three_card_net = nn.NeuralNetwork(4, 16, 2, 0.01)
 
@@ -275,7 +275,7 @@ def main():
         shuffle(deck)
 
         # print game number and percent correct choices
-        if (i % 1000 == 0) or (i <= 100 and i % 10 == 0):
+        if (i % 1000 == 0) or (i % 5 == 0 and i < 200):
             print("finished game number", i)
             if net2_total_wrong > 0 and net2_total_right > 0:
                 two_card_percent = net2_total_right/(net2_total_right + net2_total_wrong)
